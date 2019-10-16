@@ -12,9 +12,10 @@ DNA_Storage
 
 ---
 
-## # Only GC-Content and Run-Length Constraint
+## # GC-Content and Run-Length Constraint
 
 ### 1 Method Overview
+
 
 ### 2 Procedure
 
