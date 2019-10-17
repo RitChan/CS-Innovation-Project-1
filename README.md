@@ -3,10 +3,13 @@
 ## # Introduction
 
 ### 1 Prospect
+In the age of information explosion, the speed of information generation grows rapidly. According to the prediction of IDC(Internet Data Center), there will be 460 billion GB data created per day. The increase of information is challenging the existing storage device. Thus, we need to create a new storage device with higher capacity of data. DNA has high storage density, only 1 kilogram can store the data around the world. Besides, DNA’s structure is stable in ordinary temperature, which means it can store data in long term with any other power like electricity. This characteristics of DNA make it a useful material of data storage.
 
 ### 2 Constraints
+However, DNA storage has some constraints. First of all, the DNA synthesis is slow and expensive, it will take thousands of dollars and days of time to just store several MB data. Then, the stable structure of DNA based on its constraints on GC content and run-length, which means the DNA must have G and C bases between 40% and 60% and the number of continuous identical base can not be larger than 3. More over, there are some extra errors when encoding data into DNA, such as insertion and deletion. Therefore, there is a need of specific error correcting code for DNA storage. At last, since we can only synthesize DNA in short segment, it is hard to random access the data after encoding it into DNA. This constraints of DNA storage still need to be solved.
 
 ### 3 Existing Works
+Until now, there are some achievements all over the world in DNA storage. In 2015, S.M.H.T Yazdi et al. have created the first DNA-based storage architecture that enables random access to data blocks and rewriting of information stored at arbitrary locations within the blocks. In 2017, Y.Erlich and D.Zielinski use LT code to realize fountain, which enables a efficient DNA storage architecture. In 2018, W.song et al. came up a method to encoding data into DNA while satisfying the constraints of GC content and run-length. In 2019, Microsoft and University of Washington have created a fully automated system of DNA storage.
 
 ### 4 Thesis
 
