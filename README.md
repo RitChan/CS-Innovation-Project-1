@@ -43,17 +43,17 @@ Hence, the expected time comlexity for encoding and decoding $m$ segments are bo
 TEST part still in progress......
 
 ---
-### Implement a DNA storage encoding way based on DNA Fountain.(Including Error-Correcting Codes)
+## Implement a DNA storage encoding way based on DNA Fountain.(Including Error-Correcting Codes)
 
-#### Over view of DNA fountain 
+### Over view of DNA fountain 
 
 DNA fountain is a strategy for DNA storage which has strong robustness against data corruption. It could overcome both oligo dropouts and biochemical constraints of DNA storage. The encode process including the step. First, transform the binary file we want to encode  into a group of non- overlapping segments of certain length. Second, Using Luby Transform(LT code) to package data into short messages which called droplets. The droplet contains a data part that include our useful information and a fixed-length seed. The seed is used by Luby Transform to  get the droplet and let the decoder algorithm to identities the segments in the droplet. We iterate Luby Transform to create a single droplet.  Then we screening the droplet. In this stage the algorithm translates the binary droplets to a DNA sequence and screen the oligo sequence which satisfied the  GC content and homopolymer runs. Keep iterating over the droplet creation and screening steps until we get a sufficient number of valid oligos which could use for decoding.
 
-#### Details of Luby Transform(LT code)
+### Details of Luby Transform(LT code)
 
 LT code is a kind of  erasure correcting codes which can be used to transmit digital data reliably on an erasure channel. The encoding algorithm can produce an infinite number of message packets so that it is rateless.
 
-#### LT encoding
+### LT encoding
 
 Dividing the uncoded message into n blocks of equal length segments. Then using pseudorandom number generator to generate a random number of degree d. (1 ≤ *d* ≤ *n* ) Degree represents the number of block we choose to do XOR operation.
 
@@ -61,7 +61,7 @@ The number of d packets are selected by discrete uniform distribution in the n g
 
 Repeating these steps until the receiver determines that the message has been fully received and successfully decoded. 
 
-#### LT decoding 
+### LT decoding 
 
 Exclusive(XOR) are also used in the decoding process to retrieve the encoded message.  
 
