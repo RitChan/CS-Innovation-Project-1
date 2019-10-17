@@ -43,17 +43,40 @@ Hence, the expected time comlexity for encoding and decoding $m$ segments are bo
 TEST part still in progress......
 
 ---
+### Implement a DNA storage encoding way based on DNA Fountain.(Including Error-Correcting Codes)
 
-## # LT Code
+#### Over view of DNA fountain 
 
-In progress...
+DNA fountain is a strategy for DNA storage which has strong robustness against data corruption. It could overcome both oligo dropouts and biochemical constraints of DNA storage. The encode process including the step. First, transform the binary file we want to encode  into a group of non- overlapping segments of certain length. Second, Using Luby Transform(LT code) to package data into short messages which called droplets. The droplet contains a data part that include our useful information and a fixed-length seed. The seed is used by Luby Transform to  get the droplet and let the decoder algorithm to identities the segments in the droplet. We iterate Luby Transform to create a single droplet.  Then we screening the droplet. In this stage the algorithm translates the binary droplets to a DNA sequence and screen the oligo sequence which satisfied the  GC content and homopolymer runs. Keep iterating over the droplet creation and screening steps until we get a sufficient number of valid oligos which could use for decoding.
 
----
+#### Details of Luby Transform(LT code)
 
-## # Future Plan
+LT code is a kind of  erasure correcting codes which can be used to transmit digital data reliably on an erasure channel. The encoding algorithm can produce an infinite number of message packets so that it is rateless.
 
-### [1 LT Code]
+#### LT encoding
+
+Dividing the uncoded message into n blocks of equal length segments. Then using pseudorandom number generator to generate a random number of degree d. (1 ≤ *d* ≤ *n* ) Degree represents the number of block we choose to do XOR operation.
+
+The number of d packets are selected by discrete uniform distribution in the n group of blocks.  Next,  do XOR  between d packets. One result packet would be obtained. The result packet should be transform after add some extra message including how many blocks are there in the whole message (n)  and which d blocks were done the XOR operation.
+
+Repeating these steps until the receiver determines that the message has been fully received and successfully decoded. 
+
+#### LT decoding 
+
+Exclusive(XOR) are also used in the decoding process to retrieve the encoded message.  
+
+##  Future Plan
+
+### 1 LT Code
+
+Implement another DNA storage encoding way based on DNA Fountain. (Including Error-Correcting Codes). 
+
+Adding some Error-Correcting Codes to our first project. We hope it could correct basely Insertion and deletion error happening between DNA synthesis.  
 
 ### 2 Further Test
 
+Simulating the process of DNA storage by code. Using Error-generator to generator common errors which will occur to DNA storage and using our code to correct it.  The goal is to retrieve the original file.
+
 ### 3 Improve Performance
+
+For the first project we implement, the time complexity is too large when n is large. We could optimize our algorithm to shorten the time in the situation where n is large. And we also may simply the table storage to save the storage space.
