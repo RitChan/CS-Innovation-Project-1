@@ -20,13 +20,15 @@ class IO:
 
     def set_default_args(self):
         """set default command line options"""
+        # self.args.add_argument('{encode | decode}', help='specify the action', dest='action',
+        #     default='encode', choices=('encode', 'decode'))
         self.args.add_argument('-i', '--input', help='indicate input file path', dest='input', metavar='path')
         self.args.add_argument('-o', '--output', help='indicate output file path', dest='output', metavar='path')
-        self.args.add_argument('-b', '--binary', action='store_true', dest='bin', default=False, 
-                                help='flag indicates that input file is a binary file. e.g. image, audio, video etc.')
         self.args.add_argument('-v', '--verbose', action='count', default=0, dest='verbosity', help='show more info')
         self.args.add_argument('-n', default=8, dest='n', type=int, help='set n in the algorithm')
-
+        # self.args.add_argument('-b', '--binary', action='store_true', dest='bin', default=False, 
+        #     help='flag indicates that input file is a binary file. e.g. image, audio, video etc.')
+    
     def get(self, s: str):
         """get the value for given option"""
         if not self.nsp:
