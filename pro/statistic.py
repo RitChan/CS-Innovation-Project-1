@@ -12,7 +12,7 @@ from myio import IO
 
 
 def main():
-    pass
+    table_statistics()
 
 
 def table_gc_distribution(n, unit=0.1):
@@ -27,15 +27,20 @@ def table_gc_distribution(n, unit=0.1):
     tablem = get_table(n, io=io)
     # start
     count = 0
+    
     for func in tablem.en:
+        # print
         if count % 16 < 15:
             print(count, end=' ', flush=True)
         else:
             print(count, flush=True)
         count += 1
+
+        # 
         for seq in func:
             valid, gc = checker.check(seq, 2*n)
             partitions[floor(gc/unit)] += 1
+
     return partitions
 
 
@@ -44,15 +49,14 @@ def table_statistics():
     step = 0.1
     plt.figure()
     # plot
-    for k in range(5, 9):
+    for k in range(8, 9):
         print('getting distribution for n={:d}...'.format(k))
         y = table_gc_distribution(k)
         n = y.shape[0]
         x = np.array([i*step for i in range(n)])
-        x = x + 0.5
         print(y)
         plt.plot(x, y, label='n={:d}'.format(k))
-        plt.scatter(x, y, label='n={:d}'.format(k))
+        plt.scatter(x, y)
     # post-setting
     plt.xlabel('GC-Content')
     plt.xticks(x)

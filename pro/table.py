@@ -4,8 +4,8 @@
 
 import numpy as np 
 import checker
-import heapq
 from myio import IO
+from random import shuffle
 
 
 class TableManager:
@@ -28,8 +28,11 @@ class TableManager:
         for i in range(64):
             for j in range(1<<(2*self.n)):
                 rl, gc = checker.check(j, 2*self.n)  
+                gc = abs(gc-0.5)
                 if rl and checker.is_legal_cat(i, j, 2*self.n):
-                    heapq.heappush(pq, (gc, j))
+                    pq.append((gc, j))
+            shuffle(pq)
+            pq = sorted(pq, key=lambda x: x[0])
             for k in range(self.en.shape[1]):
                 self.en[i, k] = pq[k][1]
             pq.clear()
