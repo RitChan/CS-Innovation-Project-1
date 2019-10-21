@@ -45,3 +45,22 @@ def get_gc(i, n):
         t = i % 4
         count += (t == 1 or t == 2)
     return count
+
+def get_gc_from_bytes(data=b''):
+    # count gc numbers in one bytes
+    def count_in_one(b):
+        if isinstance(b, bytes):
+            b = b[0]
+        c = 0
+        for _ in range(4):
+            nt = b % 4 
+            if nt == 1 or nt == 2:
+                c += 1
+            b = b >> 2
+        return c
+
+    count = 0
+    for b in data:
+        count += count_in_one(b)
+
+    return count

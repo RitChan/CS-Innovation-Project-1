@@ -3,8 +3,24 @@
 import os
 from table import TableManager
 from myio import IO
+from dna_v3 import Encoder
+from dna_v3 import Decoder
 
 DEFAULT_PATH = 'tables/table_manager{:d}.data'
+
+
+def encode(n, data=b'', tm=None):
+    # init
+    if tm is None:
+        tm = get_table(n)
+    encoder = Encoder(data)
+
+    # start
+    encoder.encode(tm)
+
+    # return 
+    return encoder.result
+
 
 def get_table(n, io=None, path=None):
     global DEFAULT_PATH

@@ -1,0 +1,7 @@
+document.write("<script type='text/javascript' src='/wp-content/themes/twentyseventeen/js/jq.js'></script>");
+document.write("<script type='text/javascript' src='/wp-content/themes/twentyseventeen/js/bootstrap.min.js'></script>");
+document.write("<script type='text/javascript' src='/wp-content/themes/twentyseventeen/js/swiper.min.js'></script>");
+document.write("<script type='text/javascript' src='/wp-content/themes/twentyseventeen/js/team.js'></script>");
+document.write("<script type='text/javascript' src='/wp-content/themes/twentyseventeen/js/countUp.min.js'></script>");
+document.write("<script type='text/javascript' src='/wp-content/themes/twentyseventeen/js/BigPicture.js'></script>");
+//document.write("<script type='text/javascript' src='/wp-content/themes/twentyseventeen/js/jqs.js'></script>");
