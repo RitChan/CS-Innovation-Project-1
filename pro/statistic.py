@@ -15,7 +15,7 @@ def main():
     table_statistics()
 
 
-def table_gc_distribution(n, unit=0.1):
+def table_gc_distribution(n, unit):
     """get the distribution of gc content in a table
 
     n: same as table.n\n
@@ -46,19 +46,21 @@ def table_gc_distribution(n, unit=0.1):
 
 def table_statistics():
     # init
-    step = 0.1
+    step = 0.05
     plt.figure()
     # plot
-    for k in range(8, 9):
+    for k in range(7, 8):
         print('getting distribution for n={:d}...'.format(k))
-        y = table_gc_distribution(k)
+        y = table_gc_distribution(k, step)
         n = y.shape[0]
         x = np.array([i*step for i in range(n)])
+        x = x + step/2
         print(y)
         plt.plot(x, y, label='n={:d}'.format(k))
         plt.scatter(x, y)
     # post-setting
     plt.xlabel('GC-Content')
+    x = [0.1*i for i in range(11)]
     plt.xticks(x)
     plt.ylabel('number of segments')
     plt.legend(loc='upper right')
