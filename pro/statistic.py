@@ -12,7 +12,7 @@ from myio import IO
 
 
 def main():
-    table_statistics()
+    table_statistics_hist(8, norm=True)
 
 
 def table_gc_distribution(n, unit):
@@ -44,7 +44,55 @@ def table_gc_distribution(n, unit):
     return partitions
 
 
-def table_statistics():
+def raw_gc(n):
+    # init
+    gcs = np.zeros(64*(1<<(2*n-1)), dtype=np.float)
+    io = IO()
+    tablem = get_table(n, io=io)
+
+    # start
+    p = 0
+    row = 0
+    for func in tablem.en:
+        print(row % 16, end=' ', flush=True)
+        if row % 16 == 15:
+            print()
+        row += 1
+        for i in func:
+            valid, gc = checker.check(i, 2*n)
+            gcs[p] = gc
+            p += 1
+    
+    # end
+    return gcs
+
+
+def table_statistics_hist(n, norm=False):
+    # get data
+    gcs = raw_gc(n)
+    print(gcs)
+
+    # draw
+    plt.figure(1)
+    plt.subplot(1, 1, 1)
+    plt.hist(
+        gcs, bins=10, range=(0, 1), density=norm, 
+        facecolor='#ffcccc', edgecolor='black'
+    )
+
+    # set text
+    plt.xlabel('gc-content')
+    if not norm:
+        plt.ylabel('counts')
+    else:
+        plt.ylabel('density')
+    plt.title(f'Histogram of gc-content for n={n}')
+
+    # show
+    plt.show()
+
+
+def table_statistics_plot():
     # init
     step = 0.05
     plt.figure()
