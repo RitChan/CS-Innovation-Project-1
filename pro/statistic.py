@@ -86,7 +86,7 @@ def table_statistics_hist(n, norm=False):
         plt.ylabel('counts')
     else:
         plt.ylabel('density')
-    plt.title(f'Histogram of gc-content for n={n}')
+    plt.title(f'Histogram of gc-content in a table with n={n}')
 
     # show
     plt.show()
