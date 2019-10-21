@@ -4,18 +4,25 @@
 import checker
 import numpy as np
 import matplotlib.pyplot as plt
+import dnacode
+import os
+import pickle
 from table import TableManager
 from math import ceil
 from math import floor
-from dnacode import get_table
 from myio import IO
+from time import process_time
+
+XA = 0.2
 
 
 def main():
-    n = 8
-    # table_statistics_hist(n, norm=False)
+    nlist = [5, 6, 7, 8]
+    rtype = ['gc', 'time']
+    encoding_statistics(5, 'speed')
+    
 
-
+# table statistic
 def table_gc_distribution(n, unit):
     """get the distribution of gc content in a table
 
@@ -25,7 +32,7 @@ def table_gc_distribution(n, unit):
     # init
     partitions = np.zeros(floor(1/unit)+1, dtype=np.int32)
     io = IO()
-    tablem = get_table(n, io=io)
+    tablem = dnacode.get_table(n, io=io)
     # start
     count = 0
     
@@ -49,7 +56,7 @@ def raw_gc(n):
     # init
     gcs = np.zeros(64*(1<<(2*n-1)), dtype=np.float)
     io = IO()
-    tablem = get_table(n, io=io)
+    tablem = dnacode.get_table(n, io=io)
 
     # start
     p = 0
@@ -144,8 +151,155 @@ def table_statistics_plot():
     plt.show()
 
 
-def encoding_statistics():
-    pass
+# encoding statistic
+def encoding_statistics(n, rtype):
+    # init
+    try:
+        f = open(f'test_output/result{n}.data', 'rb')
+        results = pickle.load(f)
+        f.close()
+        dir_list = []    
+    except FileNotFoundError:
+        dir_list = ['test_dataset/single', 'test_dataset/sustech_files']
+        results = []
+        tm = dnacode.get_table(n)
+
+    # start
+    for directory in dir_list:
+        a, b = test_one_dir(directory, n, tm=tm)
+        print(a)
+        results.extend(b)
+    
+    # extract data
+    xlabel = ''
+    ylabel = 'count'
+    title = f'Statistics for Encoding {len(results)} Files with n={n}'
+    data = np.zeros(len(results), dtype=np.float)
+    avg = 0
+    maximum = float('-inf')
+    minimum = float('inf')
+    if rtype == 'time':
+        for i in range(len(results)):
+            data[i] = results[i].time
+            avg += data[i]
+            maximum = max(maximum, data[i])
+            minimum = min(minimum, data[i])
+        label = 'Time(s)'
+    elif rtype == 'gc':
+        gcs = 0
+        size = 0
+        for i in range(len(results)):
+            data[i] = results[i].gc / (4*results[i].size)
+            gcs += results[i].gc
+            size += 4 * results[i].size
+            maximum = max(maximum, data[i])
+            minimum = min(minimum, data[i])
+        avg = gcs / size
+        xlabel = 'GC-Content'
+    elif rtype == 'speed':
+        for i in range(len(results)):
+            data[i] = results[i].speed
+            avg += data[i]
+            maximum = max(maximum, data[i])
+            minimum = min(minimum, data[i])
+        xlabel = 'Speed(bytes/sec)'
+        avg /= len(results)
+    else:
+        for rsl in results:
+            print(rsl)
+            print()
+    # draw
+    plt.figure(1)
+    plt.subplot(1, 1, 1)
+    plt.hist(
+        data, 
+        bins=20, 
+        facecolor='#ffe5b3', 
+        edgecolor='black'
+    )
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.title(title)
+    xannotate = XA
+    plt.annotate(f'avg={avg}', xy=(xannotate, 0.9), xycoords='axes fraction')
+    plt.annotate(f'max={maximum}', xy=(xannotate, 0.85), xycoords='axes fraction')
+    plt.annotate(f'min={minimum}', xy=(xannotate, 0.8), xycoords='axes fraction')
+    plt.savefig(f'../pic/{rtype}{n}.png', format='png', dpi=300)
+    plt.show()
+
+    # store result
+    with open(f'test_output/result{n}.data', 'wb') as f:
+        pickle.dump(results, f)
+
+    return results
+    
+
+def test_one_file(path, n, info='', tm=None):
+    """test one file"""
+    # init
+    if tm is None:
+        tm = dnacode.get_table(n)
+
+    # start
+    test_rsl = TestResult()
+    test_rsl.name = path.split(sep='/')[-1]
+    test_rsl.info = info
+    start = process_time()
+    with open(path, 'rb') as f:
+        file = f.read()
+        result = dnacode.encode(n, file)
+        test_rsl.time = process_time() - start
+        test_rsl.size = len(result)
+        test_rsl.speed = test_rsl.size /test_rsl.time
+        test_rsl.gc = checker.get_gc_from_bytes(result)
+
+    return test_rsl
+
+
+def test_one_dir(path, n, info='', tm=None):
+    """test one directory, path should not end with / """
+    # init
+    file_list = os.listdir(path)
+    file_num = len(file_list)
+    dir_rsl = TestResult()
+    dir_rsl.name = path
+    results = []
+    if tm is None:
+        tm = dnacode.get_table(n)
+    start = process_time()
+
+    # start
+    print('working directory:', path)
+    for file in file_list:
+        test_rsl = test_one_file(path + '/' + file, n, tm=tm)
+        dir_rsl.gc += test_rsl.gc
+        dir_rsl.size += test_rsl.size
+        results.append(test_rsl)
+        print(f'one finished...({file})')
+    dir_rsl.time = process_time() - start
+    dir_rsl.speed = dir_rsl.size / dir_rsl.time
+
+    return dir_rsl, results
+
+
+class TestResult:
+    def __init__(self):
+        self.name = ''
+        self.time = 0
+        self.gc = 0
+        self.info = ''
+        self.size = 0 # in bytes
+        self.speed = 0
+    
+    def __str__(self):
+        s = '\n'
+        s += 'TestResult:\n'
+        s += f'name: {self.name}\n'
+        s += f'gc_content = {self.gc/(self.size*4)}\n'
+        s += f'speed = {self.speed} bytes/sec\n'
+        if self.info:
+            s += f'Additional info: {self.info}'
+        return s
 
 
 if __name__ == "__main__":
