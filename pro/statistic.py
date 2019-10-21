@@ -14,6 +14,7 @@ from myio import IO
 from time import process_time
 
 XA = 0.2
+COLOR = '#009999'
 
 
 def main():
@@ -214,7 +215,7 @@ def encoding_statistics(n, rtype):
     plt.hist(
         data, 
         bins=20, 
-        facecolor='#ffe5b3', 
+        facecolor=COLOR, 
         edgecolor='black'
     )
     plt.xlabel(xlabel)

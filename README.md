@@ -1,4 +1,4 @@
-# Report1 for DNA Storage
+# Implementation of Error-Correcting Codes for DNA Storage
 
 ## # Introduction
 
@@ -13,18 +13,6 @@ Until now, there are some achievements all over the world in the area of DNA sto
 
 In this article, we will talk about the main constraints on DNA storage: run length and GC content. Then, the topic will focus on the efficient LT code and DNA fountain. At last, the error-correcting code of DNA storage will be discussed.
 
-Reference:
-
-[1] G.M. Church, Y. Gao, and S.Kosuri, Next generation digital information storage in DNA, Science, no.6102:1628, 2012.
-
-[2] Y. Erlich and D.Zielinsiki, DNA fountain enables a robust and efficient storage architecture, Science, 6328:950954, 2017.
-
-[3] S.M.H.T Yazdi, Y. Yuan, J. Ma, H. Zhao, and O. Milenkovic, A rewritable, random access DNA based storage system, Nature Scientific Reports, 14138, 2015.
-
-[4] L. Organick, S. Dumas Ang, Y. Chen, et al. Random access in large-scale DNA data storage, Nature Biotechnology 10.1038/nbt.4079, 2018.
-
-[5] W.Song, K. Cai, M. Zhang, and C. Yuen, Codes with run length and GC content constraints for DNA based data storage, IEEE Communications Letters, col.22(10):20042007, 2018.
-
 ---
 
 ## # GC-Content and Run-Length Constraint
@@ -32,9 +20,9 @@ Reference:
 ### 1 Method Overview
 Not to make things too complex at the very beginning, it is reasonable to first consider only GC-content and run-length constraints since these two are mentioned and considered by most other studies.
 
-Wentu Song et al. have come up with a method that can (only) satisfy these two constraints and can theoretically reach the highest code rate of $\frac{2n-1}{2n}$ [Ref]. The main idea of this method is staright forward. It simply tries to enumerate  elements in $Z_{4}^{n}$ that satisfies run-length constraint with as less as possiable GC-content distance. GC-content distance is defined as the absolute value of the difference between GC-content and 0.5. By enumerating in this way, it is expected that at least $2^{2n-1}$ elements can be found such that all the elements in $Z_{2}^{2n-1}$ can be mapped to a subset of $Z_{4}^{n}$, which actually generates an encoding table.
+Wentu Song et al. have come up with a method that can (only) satisfy these two constraints and can theoretically reach the highest code rate of $\frac{2n-1}{2n}$ [5]. The main idea of this method is staright forward. It simply tries to enumerate  elements in $Z_{4}^{n}$ that satisfies run-length constraint with as less as possiable GC-content distance. GC-content distance is defined as the absolute value of the difference between GC-content and 0.5. By enumerating in this way, it is expected that at least $2^{2n-1}$ elements can be found such that all the elements in $Z_{2}^{2n-1}$ can be mapped to a subset of $Z_{4}^{n}$, which actually generates an encoding table.
 
-It is shown in [Ref] that if $3 \le n \le 35$, at least $2^{2n-1}$ elements that satisfy run-length constraint (with preceding three nucleotides) can be found in $Z_{4}^{n}$. And according to the demonstration in [Ref], there is no element violating GC-content constraint for $n=8$ and $n=10$.
+It is shown in [5] that if $3 \le n \le 35$, at least $2^{2n-1}$ elements that satisfy run-length constraint (with preceding three nucleotides) can be found in $Z_{4}^{n}$. And according to the demonstration in [5], there is no element violating GC-content constraint for $n=8$ and $n=10$.
 
 ### 2 Encoding Details
 Since $n$ should satisfy $3 \le n \le 35$. Hence, the encoding scheme must encode the original data into many short segments which are no longer than 35. Recap that DNA synthesis procedure can generate oligos of 200 nt long. So the run-length validity of an encoded segment should be verified together with preceding three nucleotides and each of the 64 possibilities of preceding three nucleotides will independently have an encoding function.
@@ -52,20 +40,46 @@ To store the reversed table, i.e., the decoding function, a hashmap and binary s
 
 Hence, the expected time comlexity for encoding and decoding $m$ segments are both $O(m)$. The most time consuming operation is constructing the encoding table since at least $2^{2n-1}$ elements need to be checked, which leads to a complexity of $O(2^n)$ for both time and space. However, the good news is that, the table need only to be constructed once.
 
-TEST part still in progress......
+Due to the space and time limit, we only performed test on $n = 5, 6, 7, 8$. The test mainly includes three parts. The first part is the gc-content statistic of tables with different $n$. The second part is the gc-content statistic of the encoding result of 60 files with different $n$. The third part shows the encoding speed of these 60 files with different $n$.
+
+ Although some elements in the encoding table may not satisfy the constraint as shown in *Part 1*, the encoding result in *Part 2* shows that the gc-contents in all cases falls into [0.4, 0.6], which can satisfy the constraint. In *Part 3*, we found that the encoding speed is slow with only tens of kilobytes per second on average. And the speed can vary in a wide range from hundreds of bytes per second to hundreds of kilobytes per second. We also found that the encoding speed decreases as $n$ increases. It requires further test to explain the result in *Part 3*.
+
+* **Part 1 Table GC-Content Test**
+<div>
+    <img src="pic/gc_distri_hist5.png" width=270 />
+    <img src="pic/gc_distri_hist6.png" width=270 />
+    <img src="pic/gc_distri_hist7.png" width=270 />
+    <img src="pic/gc_distri_hist8.png" width=270 />
+</div>
+
+* **Part 2 Encoding GC-Content Test**
+<div>
+    <img src="pic/gc5.png" width=270 />
+    <img src="pic/gc6.png" width=270 />
+    <img src="pic/gc7.png" width=270 />
+    <img src="pic/gc8.png" width=270 />
+</div>
+
+* **Part 3 Encoding Speed Test**
+<div>
+    <img src="pic/speed5.png" width=270 />
+    <img src="pic/speed6.png" width=270 />
+    <img src="pic/speed7.png" width=270 />
+    <img src="pic/speed8.png" width=270 />
+</div>
 
 ---
 ## Implement a DNA storage encoding way based on DNA Fountain.(Including Error-Correcting Codes)
 
-### Over view of DNA fountain 
+### 1 Over view of DNA fountain 
 
 DNA fountain is a strategy for DNA storage which has strong robustness against data corruption. It could overcome both oligo dropouts and biochemical constraints of DNA storage. The encode process including the step. First, transform the binary file we want to encode  into a group of non- overlapping segments of certain length. Second, Using Luby Transform(LT code) to package data into short messages which called droplets. The droplet contains a data part that include our useful information and a fixed-length seed. The seed is used by Luby Transform to  get the droplet and let the decoder algorithm to identities the segments in the droplet. We iterate Luby Transform to create a single droplet.  Then we screening the droplet. In this stage the algorithm translates the binary droplets to a DNA sequence and screen the oligo sequence which satisfied the  GC content and homopolymer runs. Keep iterating over the droplet creation and screening steps until we get a sufficient number of valid oligos which could use for decoding.
 
-### Details of Luby Transform(LT code)
+### 2 Details of Luby Transform(LT code)
 
 LT code is a kind of  erasure correcting codes which can be used to transmit digital data reliably on an erasure channel. The encoding algorithm can produce an infinite number of message packets so that it is rateless.
 
-### LT encoding
+### 3 LT Encoding
 
 Dividing the uncoded message into n blocks of equal length segments. Then using pseudorandom number generator to generate a random number of degree d. (1 ≤ *d* ≤ *n* ) Degree represents the number of block we choose to do XOR operation.
 
@@ -73,9 +87,11 @@ The number of d packets are selected by discrete uniform distribution in the n g
 
 Repeating these steps until the receiver determines that the message has been fully received and successfully decoded. 
 
-### LT decoding 
+### 4 LT Decoding 
 
 Exclusive(XOR) are also used in the decoding process to retrieve the encoded message.  
+ 
+ ---
 
 ##  Future Plan
 
@@ -92,3 +108,16 @@ Simulating the process of DNA storage by code. Using Error-generator to generato
 ### 3 Improve Performance
 
 For the first project we implement, the time complexity is too large when n is large. We could optimize our algorithm to shorten the time in the situation where n is large. And we also may simply the table storage to save the storage space.
+
+---
+## Reference
+
+[1] G.M. Church, Y. Gao, and S.Kosuri, Next generation digital information storage in DNA, Science, no.6102:1628, 2012.
+
+[2] Y. Erlich and D.Zielinsiki, DNA fountain enables a robust and efficient storage architecture, Science, 6328:950954, 2017.
+
+[3] S.M.H.T Yazdi, Y. Yuan, J. Ma, H. Zhao, and O. Milenkovic, A rewritable, random access DNA based storage system, Nature Scientific Reports, 14138, 2015.
+
+[4] L. Organick, S. Dumas Ang, Y. Chen, et al. Random access in large-scale DNA data storage, Nature Biotechnology 10.1038/nbt.4079, 2018.
+
+[5] W.Song, K. Cai, M. Zhang, and C. Yuen, Codes with run length and GC content constraints for DNA based data storage, IEEE Communications Letters, col.22(10):20042007, 2018.
