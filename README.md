@@ -3,7 +3,7 @@
 ## # Introduction
 
 ### 1 Prospect
-In the age of information explosion, the speed of information generation grows rapidly. According to the prediction of Internet Data Center(IDC)<sup>[6]</sup>, there will be 460 billion GB data created per day. The increase of information is challenging the existing storage device. Thus, we need to create a new storage-medium with higher capacity of data. DNA has high storage density, only 1 kilogram can store the data around the world. Besides, DNA’s structure is stable in ordinary temperature, which means it can store data in the long term without any other power like electricity. This characteristic of DNA make it a useful material of data storage.
+In the age of information explosion, the speed of information generation grows rapidly. According to the prediction of Internet Data Center(IDC)<sup>[6]</sup>, there will be 460 billion GB data created per day. The increase of information is challenging the existing storage technology. Thus, we need to create a new storage-medium with higher capacity of data. DNA has high storage density, only 1 kilogram can store the data around the world. Besides, DNA’s structure is stable in ordinary temperature, which means it can store data in the long term without any other power like electricity. This characteristic of DNA make it a useful material of data storage.
 
 ### 2 Process
 The process of DNA storage is encoding binary information into 4 bases of DNA, A, T, C, G. Then synthesis the bases into DNA to store data and use sequencing of DNA to read data.
