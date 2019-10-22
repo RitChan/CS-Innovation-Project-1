@@ -1,6 +1,6 @@
-# Implementation of Error-Correcting Codes for DNA Storage
+# Implementation of Two Encoding Strategies for DNA Storage
 
-## # Introduction
+## #1 Introduction
 
 ### 1 Prospect
 In the age of information explosion, the speed of information generation grows rapidly. According to the prediction of Internet Data Center(IDC), there will be 460 billion GB data created per day. The increase of information is challenging the existing storage device. Thus, we need to create a new storage device with higher capacity of data. DNA has high storage density, only 1 kilogram can store the data around the world. Besides, DNA’s structure is stable in ordinary temperature, which means it can store data in the long term without any other power like electricity. This characteristic of DNA makes it a ideal material for data storage.
@@ -11,11 +11,11 @@ However, DNA storage has some constraints. First of all, the DNA synthesis is sl
 ### 3 Existing Works
 Until now, there are some achievements all over the world in the area of DNA storage. In 1998, researchers of Harvard university first encoded binary code of a picture into DNA. This is the first time that DNA was proved to be a storage-medium of non-biological information. After that, professor Church(2012) of Harvard university successfully stored 650KB data into DNA, which is thousands of times larger than previous work. A year later, European Bioinformatics Institute(EMBL) translate 20 MB data into DNA(2013). After that, Yazdi et al.(2015) have created the first DNA-based storage architecture that enables random access of data blocks and rewriting of information stored at arbitrary locations within the blocks. Further more, Erlich and Zielinski(2017) use LT code to realize DNA fountain, which enables an efficient DNA storage architecture and its speed is 100 times faster than Church’s method. In 2018, W.song et al. came up a method of encoding data into DNA while satisfying the constraints on GC content and run length. As DNA gradually recognized as a future storage material, the number of research on DNA storage is increasing. Microsoft and University of Washington(Organick, et al.,2016) stored 200MB data into DNA. Recently, they even created a fully automated system of DNA storage, but the cost of time and money still can not be reduced. On account of the efforts of researchers, the methods of DNA storage are continuously improving.
 
-In this article, we will talk about the main constraints on DNA storage: run length and GC content. Then, the topic will focus on the efficient LT code and DNA fountain. At last, the error-correcting code of DNA storage will be discussed.
+In the next part, #2, we will explore two main constraints of DNA encoding, GC-Content constraint and Run-Length constraint and do some experiment on them. In #3, a novel encoding strategy named _Luby Transform_ will be introduced and will be further explored in our future implementation. The fourth part, #4, is about our future plan on this topic.
 
 ---
 
-## # GC-Content and Run-Length Constraint
+## #2 GC-Content and Run-Length Constraint
 
 ### 1 Method Overview
 Not to make things too complex at the very beginning, it is reasonable to first consider only GC-content and run-length constraints since these two are mentioned and considered by most other studies.
@@ -69,7 +69,7 @@ Due to the space and time limit, we only performed test on $n = 5, 6, 7, 8$. The
 </div>
 
 ---
-## Implement a DNA storage encoding strategy based on DNA Fountain.(Including Error-Correcting Codes)
+## #3 Implement a DNA storage encoding strategy based on DNA Fountain.(Including Error-Correcting Codes)
 
 ### 1 Over view of DNA fountain 
 
@@ -89,17 +89,17 @@ Repeating these steps until the receiver can determine that the message can be s
 
 #### 2.2 LT Decoding 
 
-Exclusive(XOR) are also used in the decoding process to retrieve the encoded message.  
+Exclusive OR($\oplus$) are also used in the decoding process to recover the original message. The decoding is based on the fact that for any binary number $x$, $x \oplus x = 0$. With this property of XOR, the decoding program can use the input droplet to reduce the degree of the previous droplets. A block of original data is recovered if the degree of a droplet is reduced to one. A good distribution of the random chosen degree needs to be designed to ensure that all blocks can be recovered using as less as possible droplets.
  
  ---
 
-##  Future Plan
+## #4 Future Plan
 
 ### 1 LT Code
 
 Implement another DNA storage encoding method based on DNA Fountain. (Including Error-Correcting Codes). 
 
-Adding some Error-Correcting Codes to our first project. It is expected that it could correct both Insertion and deletion error in DNA synthesis.  
+Adding some Error-Correcting Codes to our first project. It is expected that it could correct both Insertion and deletion error in DNA synthesis.
 
 ### 2 Further Test
 
@@ -107,7 +107,7 @@ Design a program named random Error-Generator. Use random Error-Generator to sim
 
 ### 3 Improve Performance
 
-For the first project we implement, the time complexity is too large when n is large. We will try to optimize our algorithm to shorten the time in the situation that n is large. And we will also try to simplify the table storage to reduce the storage space.
+For the first project we implement, the time complexity is too large when n is large. We will try to optimize our algorithm to shorten the time in the situation that n is large. And we will also try to simplify the encoding and decoding tables to reduce the storage space.
 
 ---
 ## Reference
