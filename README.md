@@ -7,6 +7,9 @@ In the age of information explosion, the speed of information generation grows r
 
 ### 2 Process
 The process of DNA storage is encoding binary information into 4 bases of DNA, A, T, C, G. Then synthesis the bases into DNA to store data and use sequencing of DNA to read data.
+<div>
+    <img src="Process.png" width=900 />
+</div>
 
 ### 3 Constraints
 However, DNA storage has some constraints. First of all, the DNA synthesis is slow and expensive, it will take thousands of dollars and days of time to just store several MB data. After that, the stable structure of DNA based on its constraints on GC content and run-length, which means the DNA must have G and C bases between 40% and 60% and the number of continuous identical base can not be larger than 3. More over, there are some extra errors when encoding data into DNA, such as insertion and deletion. Therefore, there is a need of specific error correcting code for DNA storage. At last, since we can only synthesize DNA in short segment, it is hard to randomly access the data after encoding it into DNA. This constraint on DNA storage still need to be solved.
